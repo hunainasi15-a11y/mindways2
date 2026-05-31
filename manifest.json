@@ -1,0 +1,22 @@
+{
+  "name": "AuDHD Work Companion",
+  "short_name": "AuDHD Companion",
+  "description": "Shame-free executive function support for late-diagnosed AuDHD adults.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDF6E3",
+  "theme_color": "#2A9D8F",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192/2A9D8F/FFFFFF?text=AC",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512/2A9D8F/FFFFFF?text=AC",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

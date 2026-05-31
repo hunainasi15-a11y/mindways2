@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuDHD Work Companion</title>
+  <link rel="manifest" href="manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>AuDHD Companion</h1>
+    <p id="greeting" class="greeting"></p>
+  </header>
+
+  <main id="app-view" class="view-container">
+    <!-- Views injected by app.js -->
+  </main>
+
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button data-view="dashboard" class="nav-btn active" aria-current="page">🏠 Home</button>
+    <button data-view="pregame" class="nav-btn">🧘 Pre-Game</button>
+    <button data-view="ladder" class="nav-btn">🪜 Ladder</button>
+    <button data-view="unstick" class="nav-btn">🆘 Unstick</button>
+    <button data-view="settings" class="nav-btn">⚙️</button>
+  </nav>
+
+  <script type="module" src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js');
+    }
+  </script>
+</body>
+</html>
