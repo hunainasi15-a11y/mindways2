@@ -1,0 +1,475 @@
+--- module3_task_ladder.html (原始)
+
+
++++ module3_task_ladder.html (修改后)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindways2 - Module 3: The Task Ladder</title>
+    <style>
+        :root {
+            --bg-color: #f9f7f2;
+            --text-color: #2d3436;
+            --primary: #6c5ce7;
+            --primary-light: #a29bfe;
+            --secondary: #00b894;
+            --accent: #fdcb6e;
+            --danger: #ff7675;
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1e1e2e;
+            --text-color: #e0e0e0;
+            --card-bg: #2d2d44;
+            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="high-contrast"] {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --primary: #00ffff;
+            --secondary: #00ff00;
+            --card-bg: #1a1a1a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, color 0.3s; }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        h1 { font-size: 1.5rem; color: var(--primary); }
+        h2 { font-size: 1.25rem; margin-bottom: 12px; }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-secondary { background: var(--secondary); }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-danger { background: var(--danger); }
+
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        /* Input Styles */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        /* Ladder Visuals */
+        .ladder-container {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .ladder-step {
+            background: var(--card-bg);
+            border-left: 5px solid var(--primary-light);
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.4s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ladder-step.completed {
+            border-left-color: var(--secondary);
+            opacity: 0.6;
+            transform: scale(0.98);
+        }
+
+        .ladder-step.current {
+            border-left-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+            transform: scale(1.02);
+            z-index: 2;
+        }
+
+        .step-number {
+            font-weight: bold;
+            color: var(--primary);
+            margin-right: 10px;
+            min-width: 24px;
+        }
+
+        .yuck-meter {
+            font-size: 0.8rem;
+            color: var(--danger);
+            margin-left: 10px;
+        }
+
+        /* Focus Mode */
+        .focus-mode {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .big-step {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+
+        .hidden { display: none; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes popOut {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            animation: fall linear forwards;
+            z-index: 999;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); }
+        }
+
+        /* Navigation */
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 0.9rem;
+            background: rgba(108, 92, 231, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .help-tip {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-top: 10px;
+            font-style: italic;
+            border-left: 3px solid var(--accent);
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🪜 The Task Ladder</h1>
+    <button class="btn-outline" style="width:auto; padding: 8px 12px;" onclick="toggleTheme()">🎨 Theme</button>
+</header>
+
+<!-- View 1: Create Ladder -->
+<div id="view-create" class="card">
+    <h2>What feels impossible right now?</h2>
+    <p style="margin-bottom: 15px; font-size: 0.9rem;">Name the big scary thing. We're going to make it tiny.</p>
+
+    <input type="text" id="task-title" placeholder="e.g., Clean the entire kitchen, Write the report...">
+
+    <label for="yuck-level">How much does this make your brain go "NOPE"? (Yuck Factor)</label>
+    <input type="range" id="yuck-level" min="1" max="10" value="5" oninput="updateYuckLabel(this.value)">
+    <div style="text-align: center; font-weight: bold; color: var(--danger);" id="yuck-label">Level 5 - Moderate Resistance</div>
+
+    <button class="btn" onclick="generateMicroSteps()">✨ Break It Down</button>
+
+    <div class="help-tip">
+        💡 <strong>AuDHD Insight:</strong> Task paralysis happens when the brain sees a task as too big or ambiguous. Breaking it into microscopic steps reduces the cognitive load and dopamine requirement to start.
+    </div>
+</div>
+
+<!-- View 2: The Ladder List -->
+<div id="view-ladder" class="hidden">
+    <div class="card">
+        <h2 id="display-title">Task Title</h2>
+        <div class="ladder-container" id="ladder-list">
+            <!-- Steps injected here -->
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" onclick="resetLadder()">🗑️ Start Over</button>
+            <button class="btn btn-secondary" id="start-btn" onclick="enterFocusMode()">▶️ Start Climbing</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Stuck? 🛑</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 10px;">If a step still feels too big, don't force it. Make it smaller.</p>
+        <button class="btn btn-outline" onclick="makeStepSmaller()">🔪 Slice It Smaller</button>
+        <button class="btn btn-outline" onclick="sensoryReset()">🌊 Sensory Reset</button>
+    </div>
+</div>
+
+<!-- View 3: Focus Mode -->
+<div id="view-focus" class="card hidden focus-mode">
+    <h2>Current Step</h2>
+    <div class="big-step" id="current-step-text">...</div>
+    <p>Just do this one tiny thing. Nothing else matters.</p>
+
+    <button class="btn btn-secondary" style="font-size: 1.2rem; padding: 20px;" onclick="completeStep()">✅ Done!</button>
+    <button class="btn btn-outline" onclick="exitFocusMode()">👀 See All Steps</button>
+
+    <div class="help-tip">
+        🧠 <strong>Focus Tip:</strong> If you finish this and feel good, you can stop. If you want to continue, the next step will appear. No pressure to finish the whole ladder today.
+    </div>
+</div>
+
+<!-- View 4: Celebration -->
+<div id="view-celebration" class="card hidden" style="text-align: center;">
+    <h1 style="font-size: 3rem;">🎉</h1>
+    <h2>You climbed the ladder!</h2>
+    <p id="celebration-text">You proved that big things are just small things stuck together.</p>
+    <button class="btn" onclick="resetLadder()">Build Another Ladder</button>
+    <button class="btn btn-outline" onclick="goHome()">🏠 Back to Home</button>
+</div>
+
+<div class="nav-links">
+    <a href="module1_home_dashboard.html">← Home</a>
+    <a href="module2_pre_game.html">← Pre-Game</a>
+    <a href="module4_body_double.html">Body Double →</a>
+</div>
+
+<script>
+    // State
+    let currentLadder = {
+        title: '',
+        yuck: 5,
+        steps: [],
+        currentIndex: 0
+    };
+
+    // Theme Toggle
+    function toggleTheme() {
+        const themes = ['light', 'dark', 'high-contrast'];
+        const current = document.body.getAttribute('data-theme') || 'light';
+        const next = themes[(themes.indexOf(current) + 1) % themes.length];
+        document.body.setAttribute('data-theme', next === 'light' ? '' : next);
+    }
+
+    function updateYuckLabel(val) {
+        const labels = [
+            "", "Barely noticeable", "Meh", "Slightly annoying", "Moderate Resistance",
+            "Heavy Drag", "Really Hard", "Major Block", "Extreme Resistance", "PANIC", "IMPOSSIBLE"
+        ];
+        document.getElementById('yuck-label').textContent = `Level ${val} - ${labels[val]}`;
+    }
+
+    // Logic: Generate Micro Steps
+    function generateMicroSteps() {
+        const title = document.getElementById('task-title').value;
+        if (!title) return alert("Please name the task first!");
+
+        currentLadder.title = title;
+        currentLadder.yuck = document.getElementById('yuck-level').value;
+
+        // Heuristic: Generate generic micro-steps based on task type keywords
+        const lowerTitle = title.toLowerCase();
+        let steps = [];
+
+        if (lowerTitle.includes('clean') || lowerTitle.includes('wash') || lowerTitle.includes('tidy')) {
+            steps = [
+                "Stand up and walk to the area",
+                "Pick up ONE item",
+                "Decide: Trash or Keep?",
+                "Put that ONE item away",
+                "Look at the next item (no need to touch it yet)",
+                "Take a deep breath",
+                "Pick up the second item"
+            ];
+        } else if (lowerTitle.includes('write') || lowerTitle.includes('email') || lowerTitle.includes('report')) {
+            steps = [
+                "Open the laptop/device",
+                "Open the document/app",
+                "Type the title or subject line",
+                "Write one terrible sentence (just get words down)",
+                "Read what you wrote (don't edit yet)",
+                "Write one more sentence",
+                "Save the file"
+            ];
+        } else {
+            // Generic decomposition
+            steps = [
+                "Define what 'done' looks like (mentally)",
+                "Gather any tools needed",
+                "Set a timer for 5 minutes",
+                "Do the very first physical action",
+                "Pause and check in with yourself",
+                "Do the second small action",
+                "Acknowledge progress"
+            ];
+        }
+
+        currentLadder.steps = steps.map((s, i) => ({
+            text: s,
+            completed: false,
+            id: i
+        }));
+
+        renderLadder();
+        switchView('view-ladder');
+    }
+
+    function renderLadder() {
+        const list = document.getElementById('ladder-list');
+        document.getElementById('display-title').textContent = currentLadder.title;
+        list.innerHTML = '';
+
+        currentLadder.steps.forEach((step, index) => {
+            const div = document.createElement('div');
+            div.className = `ladder-step ${step.completed ? 'completed' : ''} ${index === currentLadder.currentIndex && !step.completed ? 'current' : ''}`;
+            div.innerHTML = `
+                <div style="display:flex; align-items:center;">
+                    <span class="step-number">${index + 1}</span>
+                    <span>${step.text}</span>
+                </div>
+                ${step.completed ? '✅' : ''}
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function enterFocusMode() {
+        if (currentLadder.currentIndex >= currentLadder.steps.length) {
+            showCelebration();
+            return;
+        }
+        const step = currentLadder.steps[currentLadder.currentIndex];
+        document.getElementById('current-step-text').textContent = step.text;
+        switchView('view-focus');
+    }
+
+    function completeStep() {
+        currentLadder.steps[currentLadder.currentIndex].completed = true;
+        currentLadder.currentIndex++;
+
+        // Confetti burst
+        createConfetti();
+
+        if (currentLadder.currentIndex >= currentLadder.steps.length) {
+            showCelebration();
+        } else {
+            renderLadder();
+            enterFocusMode();
+        }
+    }
+
+    function exitFocusMode() {
+        renderLadder();
+        switchView('view-ladder');
+    }
+
+    function makeStepSmaller() {
+        alert("Okay, let's slice it smaller.\n\nInstead of the whole step, can you just:\n- Move your body toward it?\n- Touch the object?\n- Open the file?\n\nModify the step in your head to be even lazier.");
+    }
+
+    function sensoryReset() {
+        alert("🌊 SENSORY RESET\n\n1. Shake your hands out like you're shaking off water.\n2. Take one deep breath in through nose, out through mouth.\n3. Look at something blue in the room.\n\nReady? Try the step again.");
+    }
+
+    function showCelebration() {
+        createConfetti(50);
+        switchView('view-celebration');
+    }
+
+    function resetLadder() {
+        currentLadder = { title: '', yuck: 5, steps: [], currentIndex: 0 };
+        document.getElementById('task-title').value = '';
+        document.getElementById('yuck-level').value = 5;
+        updateYuckLabel(5);
+        switchView('view-create');
+    }
+
+    function goHome() {
+        window.location.href = 'module1_home_dashboard.html';
+    }
+
+    function switchView(viewId) {
+        ['view-create', 'view-ladder', 'view-focus', 'view-celebration'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+        });
+        document.getElementById(viewId).classList.remove('hidden');
+        window.scrollTo(0,0);
+    }
+
+    function createConfetti(amount = 20) {
+        const colors = ['#6c5ce7', '#00b894', '#fdcb6e', '#ff7675', '#0984e3'];
+        for (let i = 0; i < amount; i++) {
+            const conf = document.createElement('div');
+            conf.className = 'confetti';
+            conf.style.left = Math.random() * 100 + 'vw';
+            conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            conf.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(conf);
+            setTimeout(() => conf.remove(), 4000);
+        }
+    }
+
+    // Initialize
+    updateYuckLabel(5);
+</script>
+
+</body>
+</html>
