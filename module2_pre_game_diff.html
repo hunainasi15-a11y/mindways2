@@ -1,0 +1,526 @@
+--- module2_pre_game.html (原始)
+
+
++++ module2_pre_game.html (修改后)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Game Ritual Builder | mindways2</title>
+    <style>
+        :root {
+            --bg-color: #FDFCF8;
+            --text-color: #2D3436;
+            --primary: #6C5CE7;
+            --secondary: #A29BFE;
+            --accent: #00B894;
+            --card-bg: #FFFFFF;
+            --border: #DFE6E9;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --font-size-base: 18px;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1e1e2e;
+            --text-color: #cdd6f4;
+            --primary: #89b4fa;
+            --secondary: #585b70;
+            --accent: #a6e3a1;
+            --card-bg: #313244;
+            --border: #45475a;
+        }
+
+        [data-theme="high-contrast"] {
+            --bg-color: #000000;
+            --text-color: #FFFF00;
+            --primary: #00FFFF;
+            --secondary: #FF00FF;
+            --accent: #00FF00;
+            --card-bg: #1a1a1a;
+            --border: #FFFFFF;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: var(--font-size-base);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 { font-size: 1.5rem; font-weight: 700; }
+        .back-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-color); }
+
+        /* Main Container */
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+
+        /* Sections */
+        .section-title { margin: 25px 0 15px; font-size: 1.2rem; opacity: 0.8; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        /* Ritual Builder Grid */
+        .ritual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .ritual-item {
+            background: var(--bg-color);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .ritual-item.selected {
+            border-color: var(--primary);
+            background-color: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .ritual-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+        .ritual-label { font-size: 0.9rem; font-weight: 600; }
+
+        /* Timer Display */
+        .timer-display {
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            margin: 20px 0;
+            border: 2px solid var(--primary);
+        }
+
+        .time-big { font-size: 4rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--primary); }
+        .status-text { font-size: 1.2rem; margin-top: 10px; opacity: 0.8; }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.98); }
+
+        .btn-primary { background-color: var(--primary); color: white; }
+        .btn-secondary { background-color: transparent; border: 2px solid var(--border); color: var(--text-color); }
+        .btn-accent { background-color: var(--accent); color: #000; }
+
+        /* Start Small Toggle */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: var(--border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .toggle-switch.active { background: var(--accent); }
+
+        .toggle-knob {
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 24px; height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.active .toggle-knob { transform: translateX(22px); }
+
+        /* Progress Bar */
+        .progress-container {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 1s linear;
+        }
+
+        /* Hidden States */
+        .hidden { display: none; }
+
+        /* Accessibility Focus */
+        *:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <button class="back-btn" onclick="goBack()" aria-label="Go Back">←</button>
+    <h1>Pre-Game Ritual</h1>
+    <div style="width: 24px;"></div> <!-- Spacer -->
+</header>
+
+<div class="container">
+
+    <!-- Intro Text -->
+    <div id="intro-view">
+        <p style="margin-bottom: 20px; font-size: 1.1rem;">
+            Task paralysis happens when the "start" signal is too vague.
+            Build a tiny, sensory-rich ritual to tell your brain: <strong>"We are switching modes."</strong>
+        </p>
+
+        <!-- Start Small Toggle -->
+        <div class="toggle-container">
+            <div>
+                <strong>Start Small Mode</strong>
+                <div style="font-size: 0.85rem; opacity: 0.7;">Scale ritual to 60 seconds if you're really stuck.</div>
+            </div>
+            <div class="toggle-switch" id="small-mode-toggle" onclick="toggleSmallMode()">
+                <div class="toggle-knob"></div>
+            </div>
+        </div>
+
+        <div class="section-title">1. Pick Your Signals (Select 2-3)</div>
+        <div class="ritual-grid" id="ritual-options">
+            <!-- Generated by JS -->
+        </div>
+
+        <div class="section-title">2. Your Custom Ritual</div>
+        <div class="card" id="selected-rituals-list">
+            <p style="opacity: 0.6; text-align: center;" id="empty-state">No items selected yet.</p>
+        </div>
+
+        <button class="btn btn-primary" id="start-ritual-btn" onclick="startRitual()" disabled>Start Ritual Timer</button>
+    </div>
+
+    <!-- Timer View -->
+    <div id="timer-view" class="hidden">
+        <div class="timer-display">
+            <div class="status-text" id="current-step-text">Get Ready...</div>
+            <div class="time-big" id="timer-countdown">00:00</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Current Focus:</h3>
+            <p id="active-instruction" style="font-size: 1.2rem; margin-top: 10px; font-weight: 600;">Preparing...</p>
+            <p id="sub-instruction" style="opacity: 0.7; margin-top: 5px;">Take a deep breath.</p>
+        </div>
+
+        <button class="btn btn-secondary" onclick="cancelRitual()">Stop / Reset</button>
+    </div>
+
+    <!-- Success View -->
+    <div id="success-view" class="hidden" style="text-align: center; padding-top: 40px;">
+        <div style="font-size: 5rem; margin-bottom: 20px;">🚀</div>
+        <h2>Ritual Complete!</h2>
+        <p style="margin: 20px 0; font-size: 1.1rem;">You've successfully signaled your brain to shift gears. The hard part (starting) is done.</p>
+
+        <div class="card" style="background: var(--accent); color: #000; border: none;">
+            <strong>Next Step:</strong> Move immediately to the Task Ladder or your work area. Don't check your phone!
+        </div>
+
+        <button class="btn btn-primary" onclick="finishAndRedirect()">Go to Task Ladder</button>
+        <button class="btn btn-secondary" onclick="resetApp()">Create New Ritual</button>
+    </div>
+
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+
+<script>
+    // --- Data & State ---
+    const ritualOptions = [
+        { id: 'water', icon: '💧', label: 'Drink Water' },
+        { id: 'stretch', icon: '🧘', label: 'One Stretch' },
+        { id: 'breathe', icon: '🌬️', label: 'Box Breathing' },
+        { id: 'music', icon: '🎵', label: 'Play Focus Song' },
+        { id: 'light', icon: '💡', label: 'Adjust Lights' },
+        { id: 'phone', icon: '📵', label: 'Phone Away' },
+        { id: 'tab', icon: '🗑️', label: 'Close Tabs' },
+        { id: 'shoes', icon: '👟', label: 'Put on Shoes' },
+        { id: 'smell', icon: '🍋', label: 'Scent Trigger' },
+        { id: 'timer', icon: '⏱️', label: 'Set Micro-Timer' }
+    ];
+
+    let selectedIds = [];
+    let isSmallMode = false;
+    let timerInterval = null;
+    let currentStepIndex = 0;
+    let totalSteps = 0;
+
+    // --- Initialization ---
+    function init() {
+        renderOptions();
+        loadSettings();
+    }
+
+    function renderOptions() {
+        const grid = document.getElementById('ritual-options');
+        grid.innerHTML = '';
+        ritualOptions.forEach(opt => {
+            const el = document.createElement('div');
+            el.className = `ritual-item ${selectedIds.includes(opt.id) ? 'selected' : ''}`;
+            el.innerHTML = `<span class="ritual-icon">${opt.icon}</span><span class="ritual-label">${opt.label}</span>`;
+            el.onclick = () => toggleSelection(opt.id);
+            grid.appendChild(el);
+        });
+        updateSelectedList();
+    }
+
+    function toggleSelection(id) {
+        if (selectedIds.includes(id)) {
+            selectedIds = selectedIds.filter(x => x !== id);
+        } else {
+            if (selectedIds.length >= 4) {
+                alert("Keep it simple! Max 4 items for a pre-game ritual.");
+                return;
+            }
+            selectedIds.push(id);
+        }
+        renderOptions();
+    }
+
+    function updateSelectedList() {
+        const list = document.getElementById('selected-rituals-list');
+        const empty = document.getElementById('empty-state');
+        const btn = document.getElementById('start-ritual-btn');
+
+        if (selectedIds.length === 0) {
+            list.innerHTML = '<p style="opacity: 0.6; text-align: center;" id="empty-state">No items selected yet.</p>';
+            btn.disabled = true;
+            btn.style.opacity = 0.5;
+        } else {
+            let html = '<ul style="list-style: none; padding-left: 5px;">';
+            selectedIds.forEach((id, index) => {
+                const item = ritualOptions.find(x => x.id === id);
+                html += `<li style="padding: 8px 0; border-bottom: 1px dashed var(--border); display:flex; align-items:center;">
+                    <span style="margin-right:10px; font-weight:bold; color:var(--primary);">${index + 1}.</span>
+                    ${item.icon} ${item.label}
+                </li>`;
+            });
+            html += '</ul>';
+            list.innerHTML = html;
+            btn.disabled = false;
+            btn.style.opacity = 1;
+        }
+    }
+
+    function toggleSmallMode() {
+        isSmallMode = !isSmallMode;
+        const toggle = document.getElementById('small-mode-toggle');
+        if (isSmallMode) toggle.classList.add('active');
+        else toggle.classList.remove('active');
+    }
+
+    // --- Timer Logic ---
+    function startRitual() {
+        document.getElementById('intro-view').classList.add('hidden');
+        document.getElementById('timer-view').classList.remove('hidden');
+
+        // Calculate duration based on mode
+        // Normal: ~2 mins per step. Small: ~15 secs per step.
+        const stepDuration = isSmallMode ? 15 : 120;
+        totalSteps = selectedIds.length;
+        currentStepIndex = 0;
+
+        runStep(stepDuration);
+    }
+
+    function runStep(duration) {
+        if (currentStepIndex >= totalSteps) {
+            completeRitual();
+            return;
+        }
+
+        const itemId = selectedIds[currentStepIndex];
+        const item = ritualOptions.find(x => x.id === itemId);
+
+        // Update UI
+        document.getElementById('current-step-text').innerText = `Step ${currentStepIndex + 1} of ${totalSteps}`;
+        document.getElementById('active-instruction').innerText = `${item.icon} ${item.label}`;
+        document.getElementById('sub-instruction').innerText = isSmallMode ? "Do this quickly!" : "Focus entirely on this sensation.";
+
+        let timeLeft = duration;
+        const totalTime = duration;
+
+        updateTimerDisplay(timeLeft);
+
+        // Progress bar reset
+        document.getElementById('progress-bar').style.width = '0%';
+        document.getElementById('progress-bar').style.transition = `width ${duration}s linear`;
+        // Force reflow
+        void document.getElementById('progress-bar').offsetWidth;
+        document.getElementById('progress-bar').style.width = '100%';
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay(timeLeft);
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                currentStepIndex++;
+                // Optional: Play gentle chime here
+                runStep(duration);
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay(seconds) {
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        document.getElementById('timer-countdown').innerText = `${m}:${s}`;
+    }
+
+    function cancelRitual() {
+        clearInterval(timerInterval);
+        resetApp();
+    }
+
+    function completeRitual() {
+        document.getElementById('timer-view').classList.add('hidden');
+        document.getElementById('success-view').classList.remove('hidden');
+        fireConfetti();
+        saveCompletion();
+    }
+
+    function finishAndRedirect() {
+        // In a real app, this would navigate to module3.html
+        alert("Navigating to Task Ladder (Module 3)...");
+        // window.location.href = 'module3_task_ladder.html';
+    }
+
+    function resetApp() {
+        clearInterval(timerInterval);
+        document.getElementById('success-view').classList.add('hidden');
+        document.getElementById('timer-view').classList.add('hidden');
+        document.getElementById('intro-view').classList.remove('hidden');
+        selectedIds = [];
+        renderOptions();
+    }
+
+    // --- Persistence & Settings ---
+    function saveCompletion() {
+        const history = JSON.parse(localStorage.getItem('ritual_history') || '[]');
+        history.push({ date: new Date().toISOString(), mode: isSmallMode ? 'small' : 'normal' });
+        localStorage.setItem('ritual_history', JSON.stringify(history));
+    }
+
+    function loadSettings() {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+
+        const fontSize = localStorage.getItem('fontSize') || '18px';
+        document.documentElement.style.setProperty('--font-size-base', fontSize);
+    }
+
+    function goBack() {
+        // Simulate back navigation
+        if(confirm("Exit ritual builder? Unsaved progress will be lost.")) {
+            resetApp();
+            // In real app: window.history.back();
+        }
+    }
+
+    // --- Simple Confetti Effect ---
+    function fireConfetti() {
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const colors = ['#6C5CE7', '#00B894', '#FD79A8', '#FDCB6E'];
+
+        for(let i=0; i<100; i++) {
+            particles.push({
+                x: window.innerWidth / 2,
+                y: window.innerHeight / 2,
+                vx: (Math.random() - 0.5) * 10,
+                vy: (Math.random() - 0.5) * 10 - 5,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                size: Math.random() * 5 + 2
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let active = false;
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.2; // gravity
+                if(p.y < canvas.height) active = true;
+
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            if(active) requestAnimationFrame(draw);
+            else ctx.clearRect(0,0,canvas.width, canvas.height);
+        }
+        draw();
+    }
+
+    // Start
+    init();
+</script>
+
+</body>
+</html>
