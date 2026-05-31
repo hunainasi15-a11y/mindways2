@@ -1,0 +1,1095 @@
+--- module1_home_dashboard.html (原始)
+
+
++++ module1_home_dashboard.html (修改后)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AuDHD Work Companion - Executive Function Support for Late-Diagnosed Adults">
+    <meta name="theme-color" content="#5C9EAD">
+    <title>Home Dashboard | AuDHD Work Companion</title>
+    <style>
+        /* ===== CSS Variables & Theme ===== */
+        :root {
+            --teal: #5C9EAD;
+            --teal-dark: #3B7B8A;
+            --coral: #FF6B6B;
+            --yellow: #FFD93D;
+            --cream: #FDFBF7;
+            --warm-gray: #E8E4DC;
+            --text-dark: #2D3142;
+            --text-light: #6B7280;
+            --success: #4CAF50;
+            --font-size-base: 16px;
+            --border-radius: 12px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        /* Font size variations */
+        .font-small { --font-size-base: 14px; }
+        .font-medium { --font-size-base: 16px; }
+        .font-large { --font-size-base: 18px; }
+        .font-xlarge { --font-size-base: 20px; }
+
+        /* Color modes */
+        .color-warm {
+            --bg-primary: var(--cream);
+            --bg-secondary: #FFFFFF;
+            --text-primary: var(--text-dark);
+        }
+
+        .color-high-contrast {
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F0F0F0;
+            --text-primary: #000000;
+            --teal: #006666;
+            --coral: #CC0000;
+            --yellow: #CCCC00;
+        }
+
+        .color-dark {
+            --bg-primary: #1A1A2E;
+            --bg-secondary: #16213E;
+            --text-primary: #EAEAEA;
+            --text-light: #B0B0B0;
+            --warm-gray: #2D2D44;
+        }
+
+        /* Reduce motion */
+        .reduce-motion *,
+        .reduce-motion *::before,
+        .reduce-motion *::after {
+            animation-duration: 0.01ms !important;
+            transition-duration: 0.01ms !important;
+        }
+
+        /* ===== Base Styles ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-size: var(--font-size-base);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== Header ===== */
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 2px solid var(--warm-gray);
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--teal);
+            margin-bottom: 4px;
+        }
+
+        .date-display {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .greeting {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* ===== Cards ===== */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--warm-gray);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--teal);
+        }
+
+        .help-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--teal);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .help-icon:hover {
+            background: var(--teal-dark);
+            transform: scale(1.1);
+        }
+
+        /* ===== Affirmation Section ===== */
+        .affirmation-container {
+            text-align: center;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            color: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .affirmation-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(92, 158, 173, 0.4);
+        }
+
+        .affirmation-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .affirmation-hint {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        /* ===== Stats Grid ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            border: 2px solid var(--warm-gray);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--teal);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* ===== Weekly Progress Chart ===== */
+        .weekly-chart {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 120px;
+            padding: 16px 0;
+            gap: 8px;
+        }
+
+        .day-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .bar {
+            width: 100%;
+            max-width: 40px;
+            border-radius: 4px 4px 0 0;
+            transition: var(--transition);
+            min-height: 4px;
+        }
+
+        .bar-good {
+            background: var(--teal);
+        }
+
+        .bar-moderate {
+            background: var(--yellow);
+        }
+
+        .bar-rest {
+            background: var(--coral);
+            opacity: 0.7;
+        }
+
+        .day-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        .day-count {
+            font-size: 0.7rem;
+            color: var(--text-light);
+        }
+
+        /* ===== Dopamine Menu ===== */
+        .dopamine-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .menu-item {
+            padding: 16px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .menu-item.selected {
+            border-color: var(--teal);
+            background: rgba(92, 158, 173, 0.1);
+        }
+
+        .menu-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .menu-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .menu-sublabel {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .appetizer { background: #FFE5E5; }
+        .entree { background: #E5F0FF; }
+        .side { background: #E5FFE5; }
+        .dessert { background: #FFF5E5; }
+
+        .dopamine-help {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        /* ===== Quick Actions ===== */
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-button {
+            padding: 16px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .action-primary {
+            background: var(--teal);
+            color: white;
+        }
+
+        .action-primary:hover {
+            background: var(--teal-dark);
+            transform: translateY(-2px);
+        }
+
+        .action-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid var(--teal);
+        }
+
+        .action-secondary:hover {
+            background: var(--teal);
+            color: white;
+        }
+
+        .action-emergency {
+            background: var(--coral);
+            color: white;
+        }
+
+        .action-emergency:hover {
+            background: #E55A5A;
+            transform: translateY(-2px);
+        }
+
+        /* ===== Help Modal ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: flex-end;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 20px 20px 0 0;
+            padding: 24px;
+            width: 100%;
+            max-height: 70vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--teal);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .modal-body h3 {
+            color: var(--teal);
+            margin: 16px 0 8px;
+            font-size: 1rem;
+        }
+
+        .modal-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .modal-body li {
+            margin-bottom: 6px;
+        }
+
+        .research-cite {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--warm-gray);
+        }
+
+        /* ===== Confetti Animation ===== */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--teal);
+            animation: fall 3s linear forwards;
+            z-index: 999;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* ===== Accessibility ===== */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* ===== Responsive ===== */
+        @media (min-width: 481px) {
+            .container {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body class="color-warm font-medium">
+    <div class="container">
+        <!-- Header -->
+        <header role="banner">
+            <h1>AuDHD Work Companion</h1>
+            <p class="date-display" id="dateDisplay"></p>
+            <p class="greeting" id="greeting"></p>
+        </header>
+
+        <!-- Affirmation -->
+        <section class="affirmation-container"
+                 id="affirmationContainer"
+                 role="button"
+                 tabindex="0"
+                 aria-label="Tap to see next affirmation">
+            <p class="affirmation-text" id="affirmationText"></p>
+            <p class="affirmation-hint">👆 Tap for another</p>
+        </section>
+
+        <!-- Today's Stats -->
+        <section class="card" aria-labelledby="statsTitle">
+            <div class="card-header">
+                <h2 class="card-title" id="statsTitle">Today's Progress</h2>
+                <button class="help-icon"
+                        onclick="openHelp('stats')"
+                        aria-label="Help: Today's Progress">ⓘ</button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="sessionCount">0</div>
+                    <div class="stat-label">Sessions Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completionRate">0%</div>
+                    <div class="stat-label">Completion Rate</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Weekly Progress -->
+        <section class="card" aria-labelledby="weeklyTitle">
+            <div class="card-header">
+                <h2 class="card-title" id="weeklyTitle">Last 7 Days</h2>
+                <button class="help-icon"
+                        onclick="openHelp('weekly')"
+                        aria-label="Help: Weekly Progress">ⓘ</button>
+            </div>
+            <div class="weekly-chart" id="weeklyChart" role="img" aria-label="Bar chart showing wins over the last 7 days">
+                <!-- Bars generated by JS -->
+            </div>
+        </section>
+
+        <!-- Dopamine Menu -->
+        <section class="card" aria-labelledby="dopamineTitle">
+            <div class="card-header">
+                <h2 class="card-title" id="dopamineTitle">Dopamine Menu</h2>
+                <button class="help-icon"
+                        onclick="openHelp('dopamine')"
+                        aria-label="Help: Dopamine Menu">ⓘ</button>
+            </div>
+            <div class="dopamine-menu">
+                <div class="menu-item appetizer"
+                     onclick="selectDopamine('appetizer')"
+                     role="button"
+                     tabindex="0"
+                     aria-label="Appetizer: Quick tool to prime your brain">
+                    <div class="menu-icon">🔧</div>
+                    <div class="menu-label">Appetizer</div>
+                    <div class="menu-sublabel">Quick Tool</div>
+                </div>
+                <div class="menu-item entree"
+                     onclick="selectDopamine('entree')"
+                     role="button"
+                     tabindex="0"
+                     aria-label="Entrée: Sound or music to focus">
+                    <div class="menu-icon">🎵</div>
+                    <div class="menu-label">Entrée</div>
+                    <div class="menu-sublabel">Sound</div>
+                </div>
+                <div class="menu-item side"
+                     onclick="selectDopamine('side')"
+                     role="button"
+                     tabindex="0"
+                     aria-label="Side: Sensory regulation item">
+                    <div class="menu-icon">🧸</div>
+                    <div class="menu-label">Side</div>
+                    <div class="menu-sublabel">Sensory</div>
+                </div>
+                <div class="menu-item dessert"
+                     onclick="selectDopamine('dessert')"
+                     role="button"
+                     tabindex="0"
+                     aria-label="Dessert: Reward for after task">
+                    <div class="menu-icon">🎁</div>
+                    <div class="menu-label">Dessert</div>
+                    <div class="menu-sublabel">Reward</div>
+                </div>
+            </div>
+            <p class="dopamine-help">
+                Your brain needs interest to initiate. This isn't cheating — it's neurology.
+            </p>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="card" aria-labelledby="actionsTitle">
+            <div class="card-header">
+                <h2 class="card-title" id="actionsTitle">Quick Actions</h2>
+            </div>
+            <div class="quick-actions">
+                <button class="action-button action-primary"
+                        onclick="navigateTo('pre-game')"
+                        aria-label="Start Pre-Game session">
+                    🎮 Start Pre-Game
+                </button>
+                <button class="action-button action-secondary"
+                        onclick="navigateTo('ladder')"
+                        aria-label="Build a Task Ladder">
+                    🪜 Build Task Ladder
+                </button>
+                <button class="action-button action-emergency"
+                        onclick="navigateTo('emergency')"
+                        aria-label="Emergency Unstick Protocol">
+                    🆘 Emergency Unstick
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="helpModal" role="dialog" aria-modal="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Help</h2>
+                <button class="modal-close" onclick="closeHelp()" aria-label="Close help">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== Data Management =====
+        const DB_NAME = 'audhd_companion_v1';
+        const DB_VERSION = 1;
+
+        let db = null;
+
+        // Initialize IndexedDB
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+
+                request.onupgradeneeded = (event) => {
+                    const database = event.target.result;
+
+                    // Create object stores
+                    if (!database.objectStoreNames.contains('sessions')) {
+                        database.createObjectStore('sessions', { keyPath: 'id' });
+                    }
+                    if (!database.objectStoreNames.contains('wins')) {
+                        database.createObjectStore('wins', { keyPath: 'id' });
+                    }
+                    if (!database.objectStoreNames.contains('settings')) {
+                        database.createObjectStore('settings', { keyPath: 'key' });
+                    }
+                    if (!database.objectStoreNames.contains('dopamine_logs')) {
+                        database.createObjectStore('dopamine_logs', { keyPath: 'id' });
+                    }
+                };
+            });
+        }
+
+        // Generate UUID
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Get today's date string
+        function getTodayString() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // ===== Affirmations =====
+        const affirmations = [
+            "Your brain works differently, not deficiently. This is infrastructure, not failure.",
+            "Starting small is scientifically sound. Micro-steps bypass amygdala threat response.",
+            "You don't need more willpower. You need better scaffolding.",
+            "Rest days are data, not defeat. Your nervous system is regulating.",
+            "Done is better than perfect. Perfectionism is just procrastination in a tuxedo.",
+            "Your AuDHD brain has superpowers: pattern recognition, hyperfocus, creative leaps.",
+            "Task paralysis is neurological, not moral. Be kind to your nervous system.",
+            "You've survived 100% of your worst overwhelm days. You're still here.",
+            "Externalizing executive function isn't cheating. It's adaptive.",
+            "Progress isn't linear. Two steps forward, one step back is still progress.",
+            "Your worth isn't tied to productivity. You matter even on hard days.",
+            "The fact that you're trying means you care. That counts for something."
+        ];
+
+        let currentAffirmationIndex = 0;
+
+        function loadAffirmationIndex() {
+            if (!db) return 0;
+            const transaction = db.transaction(['settings'], 'readonly');
+            const store = transaction.objectStore('settings');
+            const request = store.get('user_preferences');
+
+            return new Promise((resolve) => {
+                request.onsuccess = () => {
+                    if (request.result) {
+                        resolve(request.result.affirmation_index || 0);
+                    } else {
+                        resolve(0);
+                    }
+                };
+                request.onerror = () => resolve(0);
+            });
+        }
+
+        function saveAffirmationIndex(index) {
+            if (!db) return;
+            const transaction = db.transaction(['settings'], 'readwrite');
+            const store = transaction.objectStore('settings');
+
+            store.get('user_preferences').onsuccess = (e) => {
+                const settings = e.target.result || {
+                    key: 'user_preferences',
+                    font_size: 'medium',
+                    color_mode: 'warm',
+                    reduce_motion: false,
+                    default_timer_minutes: 5,
+                    affirmation_index: 0,
+                    onboarding_complete: true
+                };
+                settings.affirmation_index = index;
+                store.put(settings);
+            };
+        }
+
+        function displayAffirmation() {
+            const affirmationEl = document.getElementById('affirmationText');
+            affirmationEl.textContent = `"${affirmations[currentAffirmationIndex]}"`;
+        }
+
+        function cycleAffirmation() {
+            currentAffirmationIndex = (currentAffirmationIndex + 1) % affirmations.length;
+            displayAffirmation();
+            saveAffirmationIndex(currentAffirmationIndex);
+        }
+
+        // ===== Greeting & Date =====
+        function updateGreeting() {
+            const now = new Date();
+            const hour = now.getHours();
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+            document.getElementById('dateDisplay').textContent = now.toLocaleDateString('en-US', dateOptions);
+
+            let greeting;
+            if (hour < 12) {
+                greeting = 'Good morning! ☀️';
+            } else if (hour < 17) {
+                greeting = 'Good afternoon! 🌤️';
+            } else {
+                greeting = 'Good evening! 🌙';
+            }
+
+            document.getElementById('greeting').textContent = greeting;
+        }
+
+        // ===== Stats Loading =====
+        async function loadTodayStats() {
+            if (!db) return;
+
+            const today = getTodayString();
+            const transaction = db.transaction(['sessions', 'wins'], 'readonly');
+            const sessionsStore = transaction.objectStore('sessions');
+            const winsStore = transaction.objectStore('wins');
+
+            // Count sessions today
+            const sessionRequest = sessionsStore.getAll();
+            sessionRequest.onsuccess = () => {
+                const sessions = sessionRequest.result.filter(s => s.date === today);
+                document.getElementById('sessionCount').textContent = sessions.length;
+            };
+
+            // Calculate completion rate (wins vs planned - simplified)
+            const winsRequest = winsStore.getAll();
+            winsRequest.onsuccess = () => {
+                const wins = winsRequest.result.filter(w => w.date === today);
+                const winCount = wins.length;
+                // Simplified: assume 5 planned wins per day
+                const rate = Math.min(Math.round((winCount / 5) * 100), 100);
+                document.getElementById('completionRate').textContent = `${rate}%`;
+            };
+        }
+
+        // ===== Weekly Chart =====
+        async function loadWeeklyChart() {
+            if (!db) return;
+
+            const chartEl = document.getElementById('weeklyChart');
+            chartEl.innerHTML = '';
+
+            const today = new Date();
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+            // Get last 7 days
+            const dateRange = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                dateRange.push(date);
+            }
+
+            const transaction = db.transaction(['wins'], 'readonly');
+            const store = transaction.objectStore('wins');
+            const request = store.getAll();
+
+            request.onsuccess = async () => {
+                const allWins = request.result;
+
+                for (const date of dateRange) {
+                    const dateStr = date.toISOString().split('T')[0];
+                    const wins = allWins.filter(w => w.date === dateStr);
+                    const winCount = wins.length;
+
+                    // Determine bar type
+                    let barClass = 'bar-rest';
+                    if (winCount >= 3) barClass = 'bar-good';
+                    else if (winCount >= 1) barClass = 'bar-moderate';
+
+                    // Calculate bar height (max 5 wins = 100% height)
+                    const height = Math.min((winCount / 5) * 100, 100);
+
+                    const column = document.createElement('div');
+                    column.className = 'day-column';
+                    column.innerHTML = `
+                        <div class="bar-container">
+                            <div class="bar ${barClass}" style="height: ${Math.max(height, 4)}%"></div>
+                        </div>
+                        <span class="day-label">${days[date.getDay()]}</span>
+                        <span class="day-count">${winCount}</span>
+                    `;
+                    chartEl.appendChild(column);
+                }
+            };
+        }
+
+        // ===== Dopamine Menu =====
+        async function selectDopamine(type) {
+            // Visual feedback
+            const items = document.querySelectorAll('.menu-item');
+            items.forEach(item => item.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+
+            // Log selection
+            if (db) {
+                const log = {
+                    id: generateUUID(),
+                    timestamp: new Date().toISOString(),
+                    date: getTodayString(),
+                    type: type,
+                    module: 'home-dashboard'
+                };
+
+                const transaction = db.transaction(['dopamine_logs'], 'readwrite');
+                const store = transaction.objectStore('dopamine_logs');
+                store.put(log);
+            }
+
+            // Micro-celebration
+            if (type === 'dessert') {
+                triggerConfetti();
+            }
+        }
+
+        // ===== Confetti =====
+        function triggerConfetti() {
+            const colors = ['#5C9EAD', '#FF6B6B', '#FFD93D', '#4CAF50'];
+
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 50);
+            }
+        }
+
+        // ===== Navigation =====
+        function navigateTo(module) {
+            // In a full app, this would route to different views
+            // For now, log the navigation intent
+            console.log(`Navigating to: ${module}`);
+
+            if (db && module === 'pre-game') {
+                // Log session start
+                const session = {
+                    id: generateUUID(),
+                    date: getTodayString(),
+                    time_start: new Date().toLocaleTimeString(),
+                    module: 'pre-game',
+                    completed: false
+                };
+
+                const transaction = db.transaction(['sessions'], 'readwrite');
+                const store = transaction.objectStore('sessions');
+                store.put(session);
+            }
+
+            alert(`This would navigate to the ${module} module in the full app.`);
+        }
+
+        // ===== Help System =====
+        const helpContent = {
+            stats: {
+                title: "Today's Progress",
+                content: `
+                    <h3>What This Shows</h3>
+                    <p><strong>Sessions Today:</strong> How many times you've opened the app to use a tool.</p>
+                    <p><strong>Completion Rate:</strong> Percentage of planned micro-steps you've completed.</p>
+
+                    <h3>Why It Works</h3>
+                    <p>Research (Barkley, 2020) shows that ADHD brains have an "intention–action gap" that is measurable. Tracking sessions normalizes the reality that initiation often takes multiple attempts.</p>
+
+                    <h3>How to Use</h3>
+                    <ul>
+                        <li>No shame if numbers are low — rest days are valid</li>
+                        <li>Celebrate showing up, even if you didn't finish</li>
+                        <li>Use data to identify patterns (time of day, triggers)</li>
+                    </ul>
+
+                    <p class="research-cite">Based on: Barkley, R. A. (2020). Executive Functions: What They Are, How They Work, and Why They Evolved.</p>
+                `
+            },
+            weekly: {
+                title: "Weekly Progress",
+                content: `
+                    <h3>What This Shows</h3>
+                    <p>A visual representation of your wins over the last 7 days.</p>
+                    <ul>
+                        <li><span style="color: var(--teal)">■</span> Teal = Good days (3+ wins)</li>
+                        <li><span style="color: var(--yellow)">■</span> Yellow = Moderate days (1–2 wins)</li>
+                        <li><span style="color: var(--coral)">■</span> Coral = Rest days (0 wins, and that's okay)</li>
+                    </ul>
+
+                    <h3>Why It Works</h3>
+                    <p>Visual progress tracking leverages ADHD dopamine systems while removing shame framing. Rest days are explicitly normalized as part of the cycle, not failures.</p>
+
+                    <h3>How to Use</h3>
+                    <ul>
+                        <li>Look for patterns, not perfection</li>
+                        <li>Notice what preceded teal days</li>
+                        <li>Honor coral days as necessary regulation</li>
+                    </ul>
+
+                    <p class="research-cite">Based on: Self-compassion research (Devon Price, 2022) and ADHD motivation science (Volkow et al., 2009).</p>
+                `
+            },
+            dopamine: {
+                title: "Dopamine Menu",
+                content: `
+                    <h3>What This Is</h3>
+                    <p>A 4-tap priming system to prepare your brain for task initiation:</p>
+                    <ul>
+                        <li><strong>🔧 Appetizer:</strong> Quick tool (open the right app, clear desk)</li>
+                        <li><strong>🎵 Entrée:</strong> Sound (focus music, white noise, podcast)</li>
+                        <li><strong>🧸 Side:</strong> Sensory (headphones, stim toy, comfortable seat)</li>
+                        <li><strong>🎁 Dessert:</strong> Reward planned for after (coffee, walk, episode)</li>
+                    </ul>
+
+                    <h3>Why It Works</h3>
+                    <p>ADHD brains initiate via interest, not importance (Volkow et al., 2009). Dopamine deficiency means you need external scaffolding to bridge the intention–action gap. This isn't procrastination — it's neurology.</p>
+
+                    <h3>How to Use</h3>
+                    <p>Tap each category before starting a task. Takes 60 seconds total. Your future self will thank you.</p>
+
+                    <p class="research-cite">Based on: Volkow, N. D., et al. (2009). Evaluating dopamine reward pathway in ADHD. JAMA.</p>
+                `
+            }
+        };
+
+        function openHelp(topic) {
+            const modal = document.getElementById('helpModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            if (helpContent[topic]) {
+                title.textContent = helpContent[topic].title;
+                body.innerHTML = helpContent[topic].content;
+                modal.classList.add('active');
+            }
+        }
+
+        function closeHelp() {
+            document.getElementById('helpModal').classList.remove('active');
+        }
+
+        // Close modal on overlay click
+        document.getElementById('helpModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeHelp();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeHelp();
+            }
+        });
+
+        // ===== Settings Loading =====
+        async function loadSettings() {
+            if (!db) return;
+
+            const transaction = db.transaction(['settings'], 'readonly');
+            const store = transaction.objectStore('settings');
+            const request = store.get('user_preferences');
+
+            request.onsuccess = () => {
+                const settings = request.result;
+                if (settings) {
+                    // Apply font size
+                    document.body.className = document.body.className.replace(/font-\w+/, `font-${settings.font_size || 'medium'}`);
+
+                    // Apply color mode
+                    document.body.className = document.body.className.replace(/color-\w+/, `color-${settings.color_mode || 'warm'}`);
+
+                    // Apply reduce motion
+                    if (settings.reduce_motion) {
+                        document.body.classList.add('reduce-motion');
+                    }
+                }
+            };
+        }
+
+        // ===== Initialization =====
+        async function init() {
+            try {
+                await initDB();
+
+                // Load settings first
+                await loadSettings();
+
+                // Load affirmation index
+                currentAffirmationIndex = await loadAffirmationIndex();
+                displayAffirmation();
+
+                // Update UI
+                updateGreeting();
+                await loadTodayStats();
+                await loadWeeklyChart();
+
+                // Set up event listeners
+                document.getElementById('affirmationContainer').addEventListener('click', cycleAffirmation);
+                document.getElementById('affirmationContainer').addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        cycleAffirmation();
+                    }
+                });
+
+                console.log('Module 1: Home Dashboard initialized successfully');
+            } catch (error) {
+                console.error('Initialization error:', error);
+            }
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
